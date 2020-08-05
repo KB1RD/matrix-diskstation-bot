@@ -20,6 +20,20 @@ This template uses a package called `config` to manage configuration. The defaul
 as `config/default.yaml`. Copy/paste this to `config/development.yaml` and `config/production.yaml` and edit
 them accordingly for your environment. These are listed in `.gitignore`.
 
+## DiskStation Docker Setup
+
+IMO, the easiest way to run this on your DiskStation is using Docker. The DiskStation has a built-in Docker
+GUI. Pull the image from https://hub.docker.com/r/kb1rdweb/matrix-diskstation-bot. Once it's downloaded,
+double-click on it and it will open a "Create container" GUI. I would recommend a 50MB limit for RAM usage.
+Now, in click on `Advanced Settings`. Under "Port Settings," remove the `8080/tcp` port since this is all
+local. Now, under "Volume," add a config file that has a mount path of `/usr/src/app/config/production.yaml`.
+Once you have configured it, you should start the container. Double-click on the container (under the main
+Docker window and under the "Container" tab on the left). This will open a window. Click on the "Terminal"
+tab. This should show you the bot running. Click the dropdown next to "Create" and press "Launch with
+Command." Use `ip address` as your command. This will show you the container's IP address and you can derive
+a URL from this. Ex, if your IP is 172.17.0.2, the URL is `http://172.17.0.2`. This ensures that only the
+DiskStation can access the push endpoint for maximum security.
+
 ## DiskStation Setup
 
 First, make sure you've set up the config file to your liking.
@@ -36,13 +50,13 @@ On the next screen, the dialog title should be "Edit HTTP Request Header." Hit n
 
 On the next screen, the dialog title should be "Edit HTTP Request Body." If it says "Select the corresponding
 category for each parameter," you selected `GET` instead of `POST`. Otherwise, you should use the "Add"
-button to add 3 parameters: `user`, `pass`, and `dummy-number`. (`dummy-number` can be named anything since
-it's ignored) The key and value should be made the same. Hit next.
+button to add 4 parameters: `user`, `pass`, `text`, and `dummy-number`. (`dummy-number` can be named anything
+since it's ignored) The key and value should be made the same. Hit next.
 
 On the final screen, you should now see "Select the corresponding category for each parameter." You should
-also see three dropdowns (`user`, `pass`, and whatever the third parameter you chose was). Now, use the
-dropdown to select `Username` next to `user`, `Password` next to `pass`, and `Phone number` next to the final
-parameter. Now click apply.
+also see four dropdowns (`user`, `pass`, `text`, and whatever the third parameter you chose was). Now, use
+the dropdown to select `Username` next to `user`, `Password` next to `pass`, `Message Content` next to
+`text`, and `Phone number` next to the final parameter. Now click apply.
 
 With any luck, you should now be able to choose your SMS provider from the dropdown. For the username and
 password, use the `user` and `pass` under the `listen` section of your config file. Enter any phone number in
