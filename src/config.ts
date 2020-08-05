@@ -3,8 +3,14 @@ import * as config from "config";
 interface IConfig {
     homeserverUrl: string;
     accessToken: string;
-    autoJoin: boolean;
+    acceptedInviteUsers: string[];
     dataPath: string;
+    listen: {
+        addr: string;
+        port: number;
+        user: string;
+        pass: string;
+    }
 }
 
 export default <IConfig>config;

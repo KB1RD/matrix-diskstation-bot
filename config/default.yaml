@@ -6,8 +6,20 @@ homeserverUrl: "https://matrix.org"
 # at https://t2bot.io/docs/access_tokens
 accessToken: "YOUR_TOKEN_HERE"
 
-# Whether or not to autojoin rooms when invited.
-autoJoin: true
+# Users that can invite this bot to a room. Be careful! Each of these users will
+# be able to monitor DiskStation alerts.
+acceptedInviteUsers: ['@alice:example.com']
 
 # Location on disk for where to store various bot information.
 dataPath: "storage"
+
+# Listening settings.
+listen:
+  # Address to bind to
+  addr: "0.0.0.0"
+  # Port to bind to
+  port: 8080
+  # `user` field in body of HTTP POST to accept
+  user: "testuser"
+  # `pass` field in body of HTTP POST to accept
+  pass: "abc123"

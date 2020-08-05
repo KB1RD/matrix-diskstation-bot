@@ -1,21 +1,12 @@
-# `matrix-bot-sdk` Bot Templates
+# matrix-diskstation-bot
 
-A template for creating bots with [matrix-bot-sdk](https://www.npmjs.com/package/matrix-bot-sdk).
-
-## Projects using this template
-
-- [matrix-zammad](https://github.com/Half-Shot/matrix-zammad) by [Half-Shot](https://github.com/Half-Shot)
-
-Want your project listed? [Edit this doc](https://github.com/turt2live/matrix-bot-sdk-bot-template/edit/master/README.md).
+Send Synology DiskStation alerts to your [Matrix](https://matrix.org/) room(s).
 
 ## Running / Building
 
-After clicking the 'use this template' button and cloning the repo, you'll need to install the dependencies
-and open an editor to get started. This assumes you have at least **NodeJS 12 or higher**.
+This assumes you have at least **NodeJS 12 or higher**.
 
-1. Replace this README with something useful.
-2. Update your project's details in `package.json`.
-3. Run `npm install` to get the dependencies.
+Run `npm install` to get the dependencies.
 
 To build it: `npm run build`.
 
@@ -23,51 +14,53 @@ To run it: `npm run start:dev`
 
 To check the lint: `npm run lint`
 
-*Think this should have a Docker image built-in? Add a 👍 to [this issue](https://github.com/turt2live/matrix-bot-sdk-bot-template/issues/1).*
-
 ### Configuration
 
 This template uses a package called `config` to manage configuration. The default configuration is offered
 as `config/default.yaml`. Copy/paste this to `config/development.yaml` and `config/production.yaml` and edit
-them accordingly for your environment.
+them accordingly for your environment. These are listed in `.gitignore`.
 
-## Project structure
+## DiskStation Setup
 
-This is a somewhat opinionated template that is runnable out of the box. The project is TypeScript with
-a linter that matches the bot-sdk itself. All the good bits of the bot are under `src/`.
+First, make sure you've set up the config file to your liking.
 
-### `src/index.ts`
+This uses the Synology DiskStation SMS push system, but pushes to Matrix instead. IMO, The DiskStation SMS
+setup is a bit awkward, though. Open the control panel on your DiskStation and open "Notification". Next,
+move over to the SMS tab at the top and click "Add SMS provider."
 
-This is where the bot's entry point is. Here you can see it reading the config, preparing the storage,
-and setting up other stuff that it'll use throughout its lifetime. Nothing in here should really require
-modification - most of the bot is elsewhere.
+You can name this anything you want. The URL should point to wherever you're running this server with an
+optional path component (which will be ignored.) A valid URL could be `http://127.0.0.1`, though you **should
+never use HTTP over the open internet.** Set the HTTP method to `POST` and hit next.
 
-### `src/commands/handler.ts`
+On the next screen, the dialog title should be "Edit HTTP Request Header." Hit next.
 
-When the bot receives a command (see `index.ts` for handoff) it gets processed here. The command structure
-is fairly manual, but a basic help menu and processing for a single command is there.
+On the next screen, the dialog title should be "Edit HTTP Request Body." If it says "Select the corresponding
+category for each parameter," you selected `GET` instead of `POST`. Otherwise, you should use the "Add"
+button to add 3 parameters: `user`, `pass`, and `dummy-number`. (`dummy-number` can be named anything since
+it's ignored) The key and value should be made the same. Hit next.
 
-### `src/commands/hello.ts`
+On the final screen, you should now see "Select the corresponding category for each parameter." You should
+also see three dropdowns (`user`, `pass`, and whatever the third parameter you chose was). Now, use the
+dropdown to select `Username` next to `user`, `Password` next to `pass`, and `Phone number` next to the final
+parameter. Now click apply.
 
-This is the bot's `!bot hello` command. It doesn't do much, but it is an example.
+With any luck, you should now be able to choose your SMS provider from the dropdown. For the username and
+password, use the `user` and `pass` under the `listen` section of your config file. Enter any phone number in
+the primary phone number field. Now click apply
 
-### `src/config.ts`
+Once the bot's been started, you should be able to invite it to a room (assuming your MXID is listed in the
+config file). Use the "Send a test SMS message" button in the same panel on the DiskStation to test it.
 
-This is simply a typescript interface for your config so you can make use of types.
+## Making sure you get the right messages
 
-### `lib/`
-
-This is where the project's build files go. Not really much to see here.
-
-### `storage/`
-
-This is the default storage location. Also not much to see here.
+By default, the DiskStation will not send many alerts via SMS. Click on the "Advanced" tab under
+"Notifications" and check the SMS box for each category you would like to receive alerts in.
 
 ## Help!
 
-Come visit us in [#matrix-bot-sdk:t2bot.io](https://matrix.to/#/#matrix-bot-sdk:t2bot.io) on Matrix if you're
-having trouble with this template.
+Come visit us in [#matrix-it-bots:kb1rd.net](https://matrix.to/#/#matrix-it-bots:kb1rd.net) on Matrix if you're
+having trouble with the bots or you'd just like to chat.
 
 ## Credits
 
-Credit to anoa's [matrix-nio template](https://github.com/anoadragon453/nio-template) for the README format.
+Credit to TravisR's [matrix-bot-sdk-bot-template](https://github.com/turt2live/matrix-bot-sdk-bot-template) for a super easy-to-use template.
